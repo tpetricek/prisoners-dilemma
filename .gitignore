@@ -1,0 +1,6 @@
+console/bin
+console/obj
+server/bin
+server/obj
+.ionide
+console/output.html
