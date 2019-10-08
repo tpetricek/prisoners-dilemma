@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Prisoner</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">  
+    <link href="https://fonts.googleapis.com/css?family=Questrial&display=swap" rel="stylesheet">
+    <style>
+      body { font-family:Questrial; }
+      header { color:white; background:rgb(88, 8, 55); padding:20px 0px 10px 0px;}
+      .menu { color:white; background:rgb(59, 1, 36); padding:5px 0px 5px 0px;}
+      .menu a { color:white; font-size:14pt; font-weight:bold; margin-right:20px; }
+      .main { padding-top:40px; }
+      label { margin-top:20px; }
+      .btn-primary { background:rgb(88, 8, 55); border-color:rgb(59, 1, 36); padding:10px 25px 10px 25px; }
+    </style>  
+  </head>
+  <body>
+    <header>
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <h1>Prisoner's Dilemma F# Dojo</h1>
+        </div>
+      </div>
+    </div>
+    </header>
+    <div class="menu">
+    <div class="container">
+      <div class="row">
+        <div class="col">
+          <a href="/">Insert</a>
+          <a href="/results">Results</a>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 main">
+          <h2>Add or update strategy</h2>
+          <form method="POST" action="/upload">
+            <div class="form-group">
+              <label for="name">File name for this strategy</label>
+              <input type="text" class="form-control" id="name" name="name">
+              <small id="nameHelp" class="form-text text-muted">
+                The name of file where you want to save your strategy.
+                If the file already exists, it will be overwritten, so you can easily edit
+                your strategy as you make it better! This will be used as a file name, so please 
+                use short name with no strange special characters. 
+              </small>
+            </div>
+            <div class="form-group">
+              <label for="code">Strategy source code</label>
+              <textarea class="form-control" id="code" name="code" rows="15"></textarea>
+              <small id="codeHelp" class="form-text text-muted">
+                Please paste the whole source code here. The first line needs to be
+                <code>module SomeModuleName</code>, so that the server can automatically
+                compile and run your code. To try this, you can start with one of the
+                sample strategies like <code>random.fs</code> as an example.
+              </small>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

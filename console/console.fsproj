@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="domain.fs" />
+    <Compile Include="strategies/collaborate.fs" />
+    <Compile Include="strategies/copy.fs" />
+    <Compile Include="strategies/random.fs" />
+    <Compile Include="register.fs" />
+    <Compile Include="main.fs" />
+  </ItemGroup>
+</Project>
