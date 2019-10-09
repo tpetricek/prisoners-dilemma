@@ -3,4 +3,6 @@ console/obj
 server/bin
 server/obj
 .ionide
+.suo
+.vs/
 console/output.html

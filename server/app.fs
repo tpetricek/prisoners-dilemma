@@ -12,7 +12,8 @@ let consoleRoot = Directory.GetCurrentDirectory() </> ".." </> "console"
 
 let updateConsoleProject () =
   let strategies = 
-    [ for f in Directory.GetFiles(consoleRoot </> "strategies") ->
+    [ for f in Directory.GetFiles(consoleRoot </> "strategies") 
+               |> Array.filter(fun f -> f.EndsWith ".fs") ->
         let decl = File.ReadLines(f) |> Seq.head
         Path.GetFileName(f), decl.Split(' ').[1] ]
 
@@ -53,6 +54,19 @@ let rebuildAndRun () =
 
 // ----------------------------------------------------------------------------
 
+// https://github.com/mathias-brandewinder/fsibot/blob/master/FsiBot/FsiBot/Filters.fs
+let badBoys = [   
+    "System.IO"
+    "System.Net"
+    "System.Threading"
+    "System.Reflection"
+    "System.Diagnostics"
+    "Console."
+    "System.Environment"
+    "System.AppDomain"
+    "System.Runtime"
+    "Microsoft." ]   
+
 let app : HttpHandler = 
   choose [
     route "/" >=> htmlFile "web/index.html"
@@ -60,7 +74,11 @@ let app : HttpHandler =
     route "/upload" >=> fun r c ->
       let name = c.Request.Form.["name"] |> Seq.head
       let code = c.Request.Form.["code"] |> Seq.head
-      File.WriteAllText(consoleRoot </> "strategies" </> (name + ".fs"), code)
+      let extension =
+        if badBoys |> Seq.exists (fun bad -> code.Replace(" ","").Contains(bad))
+        then ".fs_approve_manually"
+        else ".fs" 
+      File.WriteAllText(consoleRoot </> "strategies" </> (name.Replace("..", "").Replace("/", "").Replace("\\", "") + extension), code)
       updateConsoleProject ()
       rebuildAndRun ()
       htmlFile (consoleRoot </> "output.html") r c
