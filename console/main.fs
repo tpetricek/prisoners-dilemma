@@ -38,22 +38,27 @@ let play s1 s2 =
   let mutable score1 = 0
   let mutable score2 = 0
   for i in 1 .. 100 do
-    let a1, a2 = s1.Play o1, s2.Play o2
-    o1 <- s1.Learn o1 a1 a2
-    o2 <- s2.Learn o2 a2 a1
-    let gain1, gain2 =
-      match a1, a2 with
-      | Collaborate, Collaborate -> 2, 2
-      | Collaborate, Betray -> 0, 3
-      | Betray, Collaborate -> 3, 0
-      | Betray, Betray -> 1, 1
-    score1 <- score1 + gain1
-    score2 <- score2 + gain2
+    try
+      let a1, a2 = s1.Play o1, s2.Play o2
+      o1 <- s1.Learn o1 a1 a2
+      o2 <- s2.Learn o2 a2 a1
+      let gain1, gain2 =
+          match a1, a2 with
+          | Collaborate, Collaborate -> 2, 2
+          | Collaborate, Betray -> 0, 3
+          | Betray, Collaborate -> 3, 0
+          | Betray, Betray -> 1, 1
+      score1 <- score1 + gain1
+      score2 <- score2 + gain2
+    with // Any error: sorry, zero score!
+    | err -> Console.WriteLine (err.ToString())
   score1, score2
 
 let playAll() =
-  strategies |> Seq.map (fun s1 ->
-    strategies |> Seq.map (fun s2 ->
+  let rnd = new System.Random()
+  strategies |> Seq.sortBy(fun _ -> rnd.NextDouble()) |> Seq.map (fun s1 ->
+    strategies |> Seq.sortBy(fun _ -> rnd.NextDouble()) |> Seq.map (fun s2 ->
+      //System.Console.WriteLine ("Match: "+s1.Name+" vs "+s2.Name)
       play s1 s2 ) |> Array.ofSeq) |> Array.ofSeq
 
 // ----------------------------------------------------------------------------
@@ -76,7 +81,7 @@ let generate results =
   h?table ["class", "table table-striped"] [
     h?thead [] [ h?tr [] [
       yield h?td [] []
-      for s in strategies -> h?td [] [ text s.Name ]
+      for s in strategies -> h?td [] [ text (System.Net.WebUtility.HtmlEncode s.Name) ]
       yield h?td [] [text "Wins"]
       yield h?td [] [text "Draws"]
       yield h?td [] [text "Losses"]
@@ -84,7 +89,7 @@ let generate results =
     ] ]
     h?tbody [] [
       for s, rs, (score, (w, d, l)) in sorted -> h?tr [] [
-        yield h?td [] [ text s.Name ]
+        yield h?td [] [ text (System.Net.WebUtility.HtmlEncode s.Name) ]
         for r1, r2 in rs -> h?td [] [ text (sprintf "%d:%d" r1 r2) ]
         yield h?td [] [ text (string w) ]
         yield h?td [] [ text (string d) ]
